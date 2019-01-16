@@ -1,0 +1,13 @@
+.page-section {
+    padding: 1.92rem 0;
+
+    @mixin atMedium {
+        padding: 7.2rem 0;
+    }
+
+    &--blue {
+        background-color: var(--color-2);
+        color: #FFF;
+    }
+
+}

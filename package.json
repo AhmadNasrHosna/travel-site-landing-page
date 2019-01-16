@@ -1,8 +1,27 @@
 {
-  "name": "travel-site",
+  "name": "gulp-project",
   "version": "1.0.0",
+  "devDependencies": {
+    "autoprefixer": "^9.4.5",
+    "browser-sync": "^2.26.3",
+    "gulp": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-pug": "^4.0.1",
+    "gulp-sass": "^4.0.2",
+    "postcss-conditionals": "^2.1.0",
+    "postcss-custom-properties": "^8.0.9",
+    "postcss-each": "^0.10.0",
+    "postcss-functions": "^3.0.0",
+    "postcss-import": "^12.0.1",
+    "postcss-mixins": "^6.2.1",
+    "postcss-nested": "^4.1.1",
+    "postcss-responsive-type": "^1.0.0",
+    "postcss-simple-vars": "^5.0.1",
+    "postcss-zindex": "^4.0.1"
+  },
   "dependencies": {
-    "jquery": "^3.3.1",
-    "normalize.css": "^8.0.1"
+    "normalize.css": "^8.0.1",
+    "static-server": "^2.2.1"
   }
 }

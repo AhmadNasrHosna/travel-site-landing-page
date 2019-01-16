@@ -1,0 +1,60 @@
+/* Media */
+@define-mixin atSmall {
+    @media (min-width: 530px) {
+        @mixin-content;
+    }
+}
+
+@define-mixin atMedium {
+    @media (min-width: 800px) {
+        @mixin-content;
+    }
+}
+
+@define-mixin atLarge {
+    @media (min-width: 1200px) {
+        @mixin-content;
+    }
+}
+
+/* Pseudo Start Point */
+@define-mixin pseudo $display: block, $pos: absolute, $content: '' {
+    content: $content;
+    display: $display;
+    position: $pos;
+}
+
+/* Truncated lines */
+@define-mixin truncate $truncation-boundary {
+    max-width: $truncation-boundary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* rem-fallback */
+@define-mixin font-size $value: 1.6 {
+    font-size: calc($(value) * 10px);
+    font-size: $(value)rem;
+}
+@define-mixin line-height $value {
+    line-height: calc($(value) * 10px);
+    line-height: $(value)rem;
+}
+@define-mixin letter-spacing $value {
+    letter-spacing: calc($(value) * 10px);
+    letter-spacing: $(value)rem;
+}
+@define-mixin max-width $value {
+    max-width: calc($(value) * 10px);
+    max-width: $(value)rem;
+}
+
+/* CLEARFIX */
+@define-mixin clearfix {
+    &::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+}
