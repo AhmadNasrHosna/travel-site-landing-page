@@ -11,4 +11,6 @@
 @import "modules/_headlines";
 @import "modules/_row";
 @import "modules/_generic-content-container";
+@import "modules/_section-title";
+@import "modules/_feature-item";
 
