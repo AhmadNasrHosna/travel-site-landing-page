@@ -1,0 +1,44 @@
+.testimonial {
+    background: hsla(0, 0%, 100%, .8);
+    padding: 0 1.8rem 1px 1.8rem;
+    margin-bottom: 98px;
+
+    @mixin atLarge {
+        margin-bottom: 0;
+        padding: 0 2.9rem 1px 2.9rem;
+    }
+    
+    &--last {
+        margin-bottom: 0;
+    }
+
+    &__photo {
+        border-radius: 50%;
+        border: 6px solid hsla(0, 0%, 100%, .8);
+        width: 160px;
+        height: 160px;
+        overflow: hidden;
+        margin: 0 auto -80px;
+        position: relative;
+        top: -80px;
+    }
+
+    &__title, &__subtitle {
+        text-align: center;
+    }
+
+    &__title {
+        color: var(--color-2);
+        @mixin font-size 2.4;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    &__subtitle {
+        color: var(--color-3);
+        font-weight: 400;
+        @mixin font-size 1.5;
+        margin: .5rem 0 1.6rem;
+    }
+
+}

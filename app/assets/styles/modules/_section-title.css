@@ -30,4 +30,8 @@
         }
     }
 
+    &--blue {
+        color: var(--color-2);
+    }
+
 }

@@ -1,8 +1,8 @@
 .wrapper {
     overflow: hidden;
+    width: 100%;
     padding-left: 18px;
     padding-right: 18px;
-    width: 100%;
     @mixin max-width 123.6;
     margin: 0 auto;
 
@@ -21,5 +21,24 @@
             margin-bottom: 6.2rem;
         }
     }
+
+    &--no-padding-until-medium {
+        padding-left: 0;
+        padding-right: 0;
+        @mixin atMedium {
+            padding-left: 18px;
+            padding-right: 18px;
+        }
+    }
+
+    &--no-padding-until-large {
+        padding-left: 0;
+        padding-right: 0;
+        @mixin atLarge {
+            padding-left: 18px;
+            padding-right: 18px;
+        }
+    }
+
 }
 
