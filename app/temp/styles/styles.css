@@ -1038,4 +1038,28 @@ Instead edit gulp/templates/sprite */
     background-position: 36.69752421959096% 45.792307692307695%;
 }
 
+.site-footer {
+    background: #2f5572;
+    background: var(--color-2);
+    color: #fff;
+    padding: .8rem 0;
+    text-align: center;
+}
+
+.site-footer--text {
+        display: block;
+        margin-bottom: 1.6rem;
+        font-weight: 200;
+    }
+
+@media (min-width: 800px) {
+
+.site-footer--text {
+            display: inline;
+            margin-bottom: 0;
+            margin-right: 2.24rem
+    }
+    }
+
+
 

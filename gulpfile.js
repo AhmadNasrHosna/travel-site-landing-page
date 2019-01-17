@@ -27,12 +27,12 @@ const { src, dest, task, watch, series, parallel } = require("gulp"),
         styleWatch = './app/assets/styles/**/*.css',
         htmlWatch = './app/**/*.html';
         
-        styleSRC = '"./app/assets/styles/styles.css"',
+        styleSRC = './app/assets/styles/styles.css',
         styleURL = './app/temp/styles',
         mapURL = './',
 
-        htmlSRC     = './app/**/*.html';
-        htmlURL     = './app/';
+        htmlSRC     = './dist/**/*.html';
+        htmlURL     = './dist/';
 
 
         // Gulp SVG Sprite Config
@@ -53,6 +53,7 @@ const { src, dest, task, watch, series, parallel } = require("gulp"),
 function browser_sync(done) {
 	browserSync.init({
         port: 8080,
+        notify: false,
 		server: {
 			baseDir: './app/'
         }
@@ -133,7 +134,8 @@ function endClean() {
 
 function watch_files() {
     watch(styleWatch, series(styles, reload));
-    watch(htmlWatch,  series(html,   reload));
+    watch(htmlWatch,  series(reload));
+    //  watch(htmlWatch,  series(html, reload));
 }
 
 
