@@ -1,21 +1,32 @@
-let gulp         = require("gulp"),
-    browserSync  = require("browser-sync").create(),
-    reload       = browserSync.reload;
+// Load Gulp...of course
+const { task, watch, series, parallel } = require("gulp"),
+        browserSync = require("browser-sync").create(),
 
-gulp.task("watch", () => {
+        // Project related variables
+        styleWatch = './app/assets/styles/**/*.css',
+        htmlWatch = './app/**/*.html';
 
-    browserSync.init({
-        notify: false,
-        server: {
-            baseDir: "./app" // or "app" - app folder
-        }
-    });
+// Tasks
+function browser_sync(done) {
+	browserSync.init({
+		server: {
+			baseDir: './dist/'
+		}
+	});
+	
+	done();
+}
 
-    gulp.watch("./app/assets/styles/**/*.css", gulp.series("styles"));
-   // gulp.watch("./app/**/*.html").on('change', browserSync.reload);
-    //gulp.watch("./app/**/*.css").on('change', browserSync.reload);
-    gulp.watch(['./app/**/*.html', './app/**/*.css', './app/**/*.js'])
-        .on('change', reload);
+function reload(done) {
+    browserSync.reload();
+    done();
+}
+
+function watch_files() {
+    watch(styleWatch, series(styles, reload));
+    watch(htmlWatch,  series(html,   reload));
+}
+
+task("watch", parallel(browser_sync, watch_files));
 
 
-});
