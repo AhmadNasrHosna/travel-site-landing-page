@@ -23,10 +23,20 @@
     "postcss-nested": "^4.1.1",
     "postcss-responsive-type": "^1.0.0",
     "postcss-simple-vars": "^5.0.1",
-    "postcss-zindex": "^4.0.1"
+    "postcss-zindex": "^4.0.1",
+    "webpack": "^4.28.4",
+    "webpack-node-externals": "^1.7.2",
+    "webpack-stream": "^5.2.1",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "babel-loader": "^8.0.5"
   },
   "dependencies": {
-    "normalize.css": "^8.0.1",
-    "static-server": "^2.2.1"
+    "jquery": "^3.3.1",
+    "normalize.css": "^8.0.1"
+  },
+  "scripts": {
+    "dev": "webpack --mode development ./app/assets/scripts/App.bundle.js --output ./app/temp/scripts/",
+    "build": "webpack --mode production ./app/assets/scripts/App.bundle.js --output ./app/temp/scripts/"
   }
 }

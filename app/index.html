@@ -11,16 +11,28 @@
 </head>
 
 <body> 
-    <header>
-        <img src="assets/images/icons/clear-view-escapes.svg" />
-        <a href="#" class="btn">Get in Touch</a>
-        <nav>
-            <ul>
-                <li><a href="#our-beginning">Our Beginning</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#testimonials">Testimonials</a></li>
-            </ul>
-        </nav>
+    <header class="site-header">
+        <div class="wrapper flex-layout--flex">
+            <div class="site-header__logo">
+                <div class="site-header__logo__graphic icon icon--clear-view-escapes">Clear View Escapes</div>
+            </div>
+            <div class="site-header__menu-icon">
+                <div class="site-header__menu-icon__middle"></div>
+            </div>
+            <div class="site-header__menu-content flex-layout--row-v-center flex-layout--row-pull-right">
+                <nav class="primary-nav">
+                    <ul>
+                        <li><a href="#our-beginning">Our Beginning</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                    </ul>
+                </nav>
+                <div class="site-header__btn">
+                    <a href="#" class="btn">Get in Touch</a>
+                </div>
+            </div>
+            </div>
+        </div>
     </header>
 
     <div class="large-hero">
@@ -47,7 +59,7 @@
                 Ever since, we&rsquo;ve been working to make travel <strong>better for everyone.</strong>
             </h3>
             <div class="wrapper wrapper--medium wrapper--b-margin">
-                    <img sizes="(min-width: 970px) 976px, 100vw" srcset="assets/images/first-trip-low-res-i.jpg 565w, assets/images/first-trip-i.jpg 976w, assets/images/first-trip-hi-dpi-i.jpg 1952w" alt="Couple walking down a street.">
+                    <img sizes="(min-width: 970px) 976px, 100vw" srcset="assets/images/first-trip-low-res.jpg 565w, assets/images/first-trip.jpg 976w, assets/images/first-trip-hi-dpi.jpg 1952w" alt="Couple walking down a street.">
                 </div>
             <div class="row row--gutters">
                 <div class="row__medium-4 row__medium-4--larger row__b-bottom-until-medium">
@@ -214,6 +226,7 @@
             </p>
         </div>
     </footer>
+    <script src="temp/scripts/App.bundle.js"></script>
 </body>
 
 </html>

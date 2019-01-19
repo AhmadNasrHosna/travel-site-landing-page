@@ -1,0 +1,13 @@
+{
+    "presets": [
+      ["@babel/preset-env", {
+        "targets": {
+          "browsers": [
+            "last 2 versions",
+            "Explorer 10"
+          ]
+        },
+        "debug": true
+      }]
+    ]
+  }

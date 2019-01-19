@@ -1,39 +1,44 @@
+"use strict";
+
 // Load Gulp...of course
 const { src, dest, task, watch, series, parallel } = require("gulp"),
 
         browserSync = require("browser-sync").create(),
-
+        webpack = require('webpack-stream'),
         // css
-        autoprefixer            = require("autoprefixer"),
-        postcss                 = require("gulp-postcss"),
-        sass                    = require("gulp-sass"),
-        nested                  = require("postcss-nested"),
-        cssImport               = require("postcss-import"),
-        mixins                  = require("postcss-mixins"),
-        responsiveType          = require("postcss-responsive-type"),
-        postcssCustomProperties = require("postcss-custom-properties"),
-        simpleVars              = require("postcss-simple-vars"),
-        each                    = require("postcss-each"),
-        functions               = require("postcss-functions"),
-        conditionals            = require("postcss-conditionals"),
-        zIndex                  = require("postcss-zindex"),
-
-        svgSprite               = require("gulp-svg-sprite"),
-        rename                  = require("gulp-rename"),
-        plumber                 = require( 'gulp-plumber' ),
-        del                     = require("del"),
+        autoprefixer              = require("autoprefixer"),
+        postcss                   = require("gulp-postcss"),
+        sass                      = require("gulp-sass"),
+        nested                    = require("postcss-nested"),
+        cssImport                 = require("postcss-import"),
+        mixins                    = require("postcss-mixins"),
+        responsiveType            = require("postcss-responsive-type"),
+        postcssCustomProperties   = require("postcss-custom-properties"),
+        simpleVars                = require("postcss-simple-vars"),
+        each                      = require("postcss-each"),
+        functions                 = require("postcss-functions"),
+        conditionals              = require("postcss-conditionals"),
+        zIndex                    = require("postcss-zindex"),
+   
+        svgSprite                 = require("gulp-svg-sprite"),
+        rename                    = require("gulp-rename"),
+        plumber                   = require( 'gulp-plumber' ),
+        del                       = require("del"),
 
         // Project related variables
-        styleWatch = './app/assets/styles/**/*.css',
-        htmlWatch = './app/**/*.html';
-        
-        styleSRC = './app/assets/styles/styles.css',
-        styleURL = './app/temp/styles',
-        mapURL = './',
+        styleSRC            = './app/assets/styles/styles.css',
+        styleURL            = './app/temp/styles',
 
-        htmlSRC     = './dist/**/*.html';
-        htmlURL     = './dist/';
+        htmlSRC             = './app/assets/pug/main.pug',
+        htmlURL             = './app/temp/',
 
+        jsSRC               = './app/assets/scripts/App.js',
+        jsURL               = './app/temp/scripts/',
+        jsBundleName        = 'App.bundle.js',
+
+        styleWatch          = './app/assets/styles/**/*.css',
+        htmlWatch           = './app/**/*.html',
+        jsWatch             = './app/assets/scripts/**/*.js',
 
         // Gulp SVG Sprite Config
         config = {
@@ -52,10 +57,9 @@ const { src, dest, task, watch, series, parallel } = require("gulp"),
 // Tasks
 function browser_sync(done) {
 	browserSync.init({
-        port: 8080,
         notify: false,
 		server: {
-			baseDir: './app/'
+			baseDir: ["./", "./app"]
         }
 	});
 	
@@ -97,7 +101,50 @@ function styles() {
             this.emit("end");
         })
 
-        .pipe(dest(styleURL));
+        .pipe(dest( styleURL ));
+}
+
+// Scripts Task
+function scripts() {
+    return src( jsSRC )
+        .pipe(webpack(
+            {
+                // Gulp configuration
+                entry: [ jsSRC ],
+                output: {
+                    filename: jsBundleName // or '[name].js' for the default name 'main.js' in [webpack 4].
+                },
+                mode: 'production', // | 'development' | 'none'
+
+                // Babel configuration
+                module: {
+                    rules: [
+                        {
+                            test: /\.js$/,
+                            exclude: /node_modules/,
+                            use: {
+                                loader: 'babel-loader',
+                                options: {
+                                    presets: ['@babel/preset-env']
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ))
+
+        .on("error", function(err, stats, callback) {
+            if (err) {
+                console.log(err.toString());
+                this.emit("end");
+              }
+
+              console.log(stats.toString());
+              callback();
+        })
+        
+        .pipe(dest(jsURL));
 }
 
 // HTML Task
@@ -131,16 +178,15 @@ function endClean() {
     return del('./app/temp/sprite');
 }
 
-
 function watch_files() {
     watch(styleWatch, series(styles, reload));
     watch(htmlWatch,  series(reload));
-    //  watch(htmlWatch,  series(html, reload));
+    watch(jsWatch,  series(scripts, reload));
 }
 
 
 task("styles", styles);
-task("html", html);
+task('scripts', scripts);
 
 task("beginClean", beginClean);
 task("createSprite", createSprite);
@@ -157,6 +203,6 @@ task("icons",
     )
 );
 
-task("watch", parallel(browser_sync, watch_files));
+task("default", parallel(browser_sync, watch_files));
 
 
