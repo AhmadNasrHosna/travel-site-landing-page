@@ -46,7 +46,9 @@
             font-size: inherit;
             padding: 0;
             background-color: transparent;
-
+            &.is-current-link {
+                color: #fabb69;
+            }
         }
     }
 }

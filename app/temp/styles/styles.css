@@ -622,7 +622,7 @@ a {
 @media (min-width: 1010px) {
 
 .page-section--testimonials {
-            background: url("/assets/images/testimonials-bg.jpg") top center no-repeat;
+            background: url("../../assets/images/testimonials-bg.jpg") top center no-repeat;
             background-size: cover
     }
     }
@@ -971,7 +971,7 @@ a {
 Instead edit gulp/templates/sprite */
 
 .icon {
-    background-image: url("/assets/images/sprites/sprite-d675eadb.svg");
+    background-image: url("../../assets/images/sprites/sprite-d675eadb.svg");
 }
 
 .icon--clear-view-escapes {
@@ -1079,9 +1079,14 @@ Instead edit gulp/templates/sprite */
 @media (min-width: 800px) {
 
 .site-header {
+        position: fixed;
         background-color: hsla(206, 42%, 32%, .3);
         padding: 1rem 0
 }
+
+        .site-header--dark {
+            background-color: hsla(206, 52%, 19%, .85);
+        }
     }
 
 .site-header--is-expanded {
@@ -1099,6 +1104,8 @@ Instead edit gulp/templates/sprite */
                 transform: translateX(-50%) scale(.8);
         -webkit-transform-origin: 50% 0;
                 transform-origin: 50% 0;
+        transition: all 300ms ease;
+
     }
 
 .site-header__logo__graphic {
@@ -1111,7 +1118,13 @@ Instead edit gulp/templates/sprite */
             left: auto;
             -webkit-transform: translateX(0) scale(1);
                     transform: translateX(0) scale(1)
+
     }
+
+            .site-header--dark .site-header__logo {
+                -webkit-transform: scale(.57);
+                        transform: scale(.57);
+            }
     }
 
 .site-header__menu-icon {
@@ -1278,6 +1291,9 @@ Instead edit gulp/templates/sprite */
             padding: 0;
             background-color: transparent
     }
+            .primary-nav a.is-current-link {
+                color: #fabb69;
+            }
     }
 
 .flex-layout--flex {

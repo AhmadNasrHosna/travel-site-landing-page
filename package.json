@@ -17,6 +17,7 @@
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
     "gulp-svg-sprite": "^1.5.0",
+    "jquery-smooth-scroll": "^2.2.0",
     "jquery-waypoints": "^2.0.5",
     "postcss-conditionals": "^2.1.0",
     "postcss-custom-properties": "^8.0.9",
