@@ -1306,6 +1306,19 @@ Instead edit gulp/templates/sprite */
         align-items: center;
     }
 
+.reveal-item {
+    opacity: 0;
+    transition: all 1000ms ease-out;
+    -webkit-transform: scale(1.3);
+            transform: scale(1.3);
+}
+
+.reveal-item--is-visible {
+        opacity: 1;
+        -webkit-transform: scale(1);
+                transform: scale(1)
+    }
+
 
 
 
