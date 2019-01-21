@@ -32,9 +32,11 @@ const { src, dest, task, watch, series, parallel } = require("gulp"),
         htmlSRC             = './app/assets/pug/main.pug',
         htmlURL             = './app/temp/',
 
-        jsSRC               = './app/assets/scripts/App.js',
+        jsAppSRC            = './app/assets/scripts/App.js',
+        jsVendorSRC         = './app/assets/scripts/Vendor.js',
         jsURL               = './app/temp/scripts/',
-        jsBundleName        = 'App.bundle.js',
+        //jsBundleName      = 'App.bundle.js',
+        //jsFiles           = [ jsURL, jsVendor ],
 
         styleWatch          = './app/assets/styles/**/*.css',
         htmlWatch           = './app/**/*.html',
@@ -106,13 +108,16 @@ function styles() {
 
 // Scripts Task
 function scripts() {
-    return src( jsSRC )
+    return src( jsAppSRC )
         .pipe(webpack(
             {
                 // Gulp configuration
-                entry: [ jsSRC ],
+                entry: {
+                    App: jsAppSRC,
+                    Vendor: jsVendorSRC 
+                },
                 output: {
-                    filename: jsBundleName // or '[name].js' for the default name 'main.js' in [webpack 4].
+                    filename: '[name].js' // for the default name 'main.js' in [webpack 4].
                 },
                 mode: 'production', // | 'development' | 'none'
 
