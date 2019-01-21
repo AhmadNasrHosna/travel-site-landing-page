@@ -1,64 +1,56 @@
- .row {
-     @mixin clearfix;
+.row {
+    @mixin clearfix;
 
-     &--gutters {
-         margin-right: -65px;
-     }
-     
-     &--gutters-large {
-         margin-right: -100px;
-     }
-
-     &--gutters-small {
+    &--gutters {
+        margin-right: -65px;
+    }
+    &--gutters-large {
+        margin-right: -100px;
+    }
+    &--gutters-small {
         margin-right: -45px;
     }
-     
-     &--t-padding {
+    &--t-padding {
         padding-top: 80px;
-     }
-
-     &--gutters > div {
-         padding-right: 65px;
-     }
-
-     &--gutters-large > div {
+    }
+    &--gutters > div {
+        padding-right: 65px;
+    }
+    &--gutters-large > div {
         padding-right: 100px;
     }
-
     &--gutters-small > div {
         padding-right: 45px;
     }
+    &__b-bottom-until-medium {
+        margin-bottom: 1.6rem;
+    }
 
-     &__b-bottom-until-medium {
-         margin-bottom: 1.6rem;
-     }
+    @mixin atMedium {
+        &__b-bottom-until-medium {
+            margin-bottom: 0;
+        }
+        &__medium-4 {
+            float: left;
+            width: 33.33%;
+        }
+        &__medium-6 {
+            float: left;
+            width: 50%;
+        }
+        &__medium-8 {
+            float: right;
+            width: 66.66%;
+        }
+        &__medium-4--larger {
+            width: 37%;
+        }
+        &__medium-8--smaller {
+            width: 63%;
+        }
+    }
 
-
-     @mixin atMedium {
-         &__b-bottom-until-medium {
-             margin-bottom: 0;
-         }
-         &__medium-4 {
-             float: left;
-             width: 33.33%;
-         }
-         &__medium-6 {
-             float: left;
-             width: 50%;
-         }
-         &__medium-8 {
-             float: right;
-             width: 66.66%;
-         }
-         &__medium-4--larger {
-             width: 37%;
-         }
-         &__medium-8--smaller {
-             width: 63%;
-         }
-     }
-
-     @mixin atLarge {
+    @mixin atLarge {
         &__b-bottom-until-large {
             margin-bottom: 0;
         }
@@ -82,8 +74,10 @@
         }
     }
 
-     /* Begin Equal Height Rule */
-     &--equal-height-at-medium {
+
+
+    /* Begin Equal Height Rule */
+    .flexbox &--equal-height-at-medium {
         @mixin atMedium {
             display: flex;
         }
@@ -92,9 +86,9 @@
             float: none;
             display: flex;
         }
-     }
+    }
 
-     &--equal-height-at-large {
+    .flexbox &--equal-height-at-large {
         @mixin atLarge {
             display: flex;
         }
@@ -103,6 +97,5 @@
             float: none;
             display: flex;
         }
-     }
-
- }
+    }
+}

@@ -1,10 +1,12 @@
 "use strict";
 
-// Load Gulp...of course
+// Load Gulp
 const { src, dest, task, watch, series, parallel } = require("gulp"),
 
         browserSync = require("browser-sync").create(),
         webpack = require('webpack-stream'),
+        modernizr = require('gulp-modernizr'),
+
         // css
         autoprefixer              = require("autoprefixer"),
         postcss                   = require("gulp-postcss"),
@@ -21,6 +23,7 @@ const { src, dest, task, watch, series, parallel } = require("gulp"),
         zIndex                    = require("postcss-zindex"),
    
         svgSprite                 = require("gulp-svg-sprite"),
+        svg2png                   = require("gulp-svg2png"),
         rename                    = require("gulp-rename"),
         plumber                   = require( 'gulp-plumber' ),
         del                       = require("del"),
@@ -36,16 +39,28 @@ const { src, dest, task, watch, series, parallel } = require("gulp"),
         jsVendorSRC         = './app/assets/scripts/Vendor.js',
         jsURL               = './app/temp/scripts/',
         //jsBundleName      = 'App.bundle.js',
-        //jsFiles           = [ jsURL, jsVendor ],
+        //jsFiles           = [ jsAppSRC, jsVendor ],
 
         styleWatch          = './app/assets/styles/**/*.css',
         htmlWatch           = './app/**/*.html',
         jsWatch             = './app/assets/scripts/**/*.js',
 
         // Gulp SVG Sprite Config
-        config = {
+        spriteConfig = {
+            shape: {
+                spacing: {
+                    padding: 1
+                }
+            },
             mode: {
                 css: {
+                    variables: {
+                        replaceSvgWithPng: () => {
+                            return (sprite, render) => {
+                                return render(sprite).split('.svg').join('.png');
+                            }
+                        }
+                    },
                     sprite: "sprite.svg",
                     render: {
                         css: {
@@ -103,7 +118,8 @@ function styles() {
             this.emit("end");
         })
 
-        .pipe(dest( styleURL ));
+        .pipe(dest( styleURL ))
+        .pipe( browserSync.stream() );
 }
 
 // Scripts Task
@@ -149,7 +165,8 @@ function scripts() {
               callback();
         })
         
-        .pipe(dest(jsURL));
+        .pipe(dest(jsURL))
+        .pipe( browserSync.stream() );
 }
 
 // HTML Task
@@ -164,12 +181,19 @@ function beginClean() {
 
 function createSprite() {
     return src('./app/assets/images/icons/**/*.svg')
-        .pipe(svgSprite(config))
+        .pipe(svgSprite(spriteConfig))
         .pipe(dest('./app/temp/sprite/'));
+        
+}
+
+function createPngCopy() {
+    return src('./app/temp/sprite/css/*.svg')
+        .pipe(svg2png())
+        .pipe(dest('./app/temp/sprite/css'));
 }
 
 function copySpriteGraphic() {
-    return src('./app/temp/sprite/css/**/*.svg')
+    return src('./app/temp/sprite/css/**/*.{svg,png}')
         .pipe(dest('./app/assets/images/sprites'));
 }
 
@@ -183,18 +207,31 @@ function endClean() {
     return del('./app/temp/sprite');
 }
 
+function modernizrTask() {
+    return src([styleWatch, jsWatch])
+        .pipe(modernizr({
+            "options": [
+                "setClasses"
+            ]
+        }))
+
+        .pipe(dest(jsURL));
+}
+
 function watch_files() {
     watch(styleWatch, series(styles, reload));
     watch(htmlWatch,  series(reload));
-    watch(jsWatch,  series(scripts, reload));
+    watch(jsWatch,    series(modernizrTask, scripts, reload));
 }
 
 
 task("styles", styles);
 task('scripts', scripts);
+task('modernizrTask', modernizrTask);
 
 task("beginClean", beginClean);
 task("createSprite", createSprite);
+task("createPngCopy", createPngCopy);
 task("copySpriteGraphic", copySpriteGraphic);
 task("copySpriteCSS", copySpriteCSS);
 task("endClean", endClean);
@@ -202,6 +239,7 @@ task("icons",
     series(
         beginClean,
         createSprite,
+        createPngCopy,
         copySpriteGraphic,
         copySpriteCSS,
         endClean
