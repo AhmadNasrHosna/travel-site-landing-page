@@ -10,6 +10,10 @@
         @mixin max-width 97.6;
     }
 
+    &--narrow {
+        @mixin max-width 47;
+    }
+    
     .wrapper {
         padding-left: 0;
         padding-right: 0;

@@ -58,3 +58,15 @@
         display: table;
     }
 }
+
+
+/* Remove li Bullets with zero-width space  */
+
+@define-mixin remove-bullets {
+    li {
+        list-style-type: none; /* remove bullets */
+        &::before {
+            content: "\200B"; /* add zero-width space */
+        }
+    }
+}

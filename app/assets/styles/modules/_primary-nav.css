@@ -22,7 +22,7 @@
         }
     }
 
-    li:before {
+    li::before {
         content: "\200B";         /* add zero-width space */
     }
 

@@ -1,0 +1,41 @@
+.social-icons {
+    text-align: center;
+
+    &--row {
+        ul {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            @mixin remove-bullets;
+        }
+    }
+
+    &__icon {
+        background-color: var(--color-3);
+        display: inline-block;
+        width: 13.2rem;
+        max-width: 100%;
+        height: 7.2rem;
+        position: relative;
+        margin: .25em .6rem;
+
+        @mixin atSmall {
+            width: 7.2rem;
+            margin: 0 .5rem;
+        }
+
+        @mixin atSmall {
+            width: 7.2rem;
+            margin: 0 .5rem;
+        }
+
+        .icon {
+            display: block;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
