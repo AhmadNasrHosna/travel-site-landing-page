@@ -13,9 +13,11 @@
     &--t-padding {
         padding-top: 80px;
     }
+
     &--gutters > div {
         padding-right: 65px;
     }
+    
     &--gutters-large > div {
         padding-right: 100px;
     }

@@ -3,9 +3,17 @@
 // Load Gulp
 const { src, dest, task, watch, series, parallel } = require("gulp"),
 
-        browserSync = require("browser-sync").create(),
-        webpack = require('webpack-stream'),
-        modernizr = require('gulp-modernizr'),
+        browserSync               = require("browser-sync").create(),
+        webpack                   = require('webpack-stream'),
+        modernizr                 = require('gulp-modernizr'),
+
+        imagemin                  = require('gulp-imagemin'),
+        imageminPngquant          = require('imagemin-pngquant'),
+        imageminMozjpeg           = require('imagemin-mozjpeg'),
+        cssnano                   = require('cssnano'),
+        uglify                    = require('gulp-uglify'),
+        RevAll                    = require('gulp-rev-all'),
+        inject                    = require('gulp-inject'),
 
         // css
         autoprefixer              = require("autoprefixer"),
@@ -27,26 +35,26 @@ const { src, dest, task, watch, series, parallel } = require("gulp"),
         rename                    = require("gulp-rename"),
         plumber                   = require( 'gulp-plumber' ),
         del                       = require("del"),
-
+    
         // Project related variables
-        styleSRC            = './app/assets/styles/styles.css',
-        styleURL            = './app/temp/styles',
-
-        htmlSRC             = './app/assets/pug/main.pug',
-        htmlURL             = './app/temp/',
-
-        jsAppSRC            = './app/assets/scripts/App.js',
-        jsVendorSRC         = './app/assets/scripts/Vendor.js',
-        jsURL               = './app/temp/scripts/',
-        //jsBundleName      = 'App.bundle.js',
-        //jsFiles           = [ jsAppSRC, jsVendor ],
-
-        styleWatch          = './app/assets/styles/**/*.css',
-        htmlWatch           = './app/**/*.html',
-        jsWatch             = './app/assets/scripts/**/*.js',
-
+        styleSRC                  = './app/assets/styles/styles.css',
+        styleURL                  = './app/temp/styles',
+    
+        htmlSRC                   = './app/index.html',
+        htmlURL                   = './app/temp/',
+    
+        jsAppSRC                  = './app/assets/scripts/App.js',
+        jsVendorSRC               = './app/assets/scripts/vendors/Vendor.js',
+        jsURL                     = './app/temp/scripts/',
+        //jsBundleName            = 'App.bundle.js',
+        //jsFiles                 = [ jsAppSRC, jsVendor ],
+      
+        styleWatch                = './app/assets/styles/**/*.css',
+        htmlWatch                 = './app/**/*.html',
+        jsWatch                   = './app/assets/scripts/**/*.js',
+    
         // Gulp SVG Sprite Config
-        spriteConfig = {
+        spriteConfig = {    
             shape: {
                 spacing: {
                     padding: 1
@@ -71,12 +79,13 @@ const { src, dest, task, watch, series, parallel } = require("gulp"),
             }
         };
 
-// Tasks
+// Server -------------------------------------------
 function browser_sync(done) {
 	browserSync.init({
         notify: false,
 		server: {
-			baseDir: ["./", "./app"]
+            baseDir: ["./app"]
+            //baseDir: ["./", "./app"]
         }
 	});
 	
@@ -94,9 +103,10 @@ function triggerPlumber( src_file, dest_file ) {
 		.pipe( dest( dest_file ) );
 }
 
-// Styles Task
+// Styles Task -------------------------------------------
 function styles() {
     return src(styleSRC)
+        //.pipe(rename({ suffix: ".min" }))
         .pipe(
             postcss([
                 cssImport,
@@ -109,7 +119,8 @@ function styles() {
                 zIndex,
                 responsiveType,
                 nested,
-                autoprefixer
+                autoprefixer,
+                cssnano()
             ])
         )
 
@@ -122,7 +133,7 @@ function styles() {
         .pipe( browserSync.stream() );
 }
 
-// Scripts Task
+// Scripts Task -------------------------------------------
 function scripts() {
     return src( jsAppSRC )
         .pipe(webpack(
@@ -130,7 +141,7 @@ function scripts() {
                 // Gulp configuration
                 entry: {
                     App: jsAppSRC,
-                    Vendor: jsVendorSRC 
+                    "vendors/Vendor": jsVendorSRC,
                 },
                 output: {
                     filename: '[name].js' // for the default name 'main.js' in [webpack 4].
@@ -154,6 +165,7 @@ function scripts() {
                 }
             }
         ))
+        .pipe(uglify())
 
         .on("error", function(err, stats, callback) {
             if (err) {
@@ -169,12 +181,12 @@ function scripts() {
         .pipe( browserSync.stream() );
 }
 
-// HTML Task
+// HTML Task -------------------------------------------
 function html() {
 	return triggerPlumber( htmlSRC, htmlURL );
 }
 
-// Spirtes Task
+// Spirtes Task -------------------------------------------
 function beginClean() {
     return del(['./app/temp/sprite', './app/assets/images/sprites']);
 }
@@ -207,6 +219,8 @@ function endClean() {
     return del('./app/temp/sprite');
 }
 
+// Modernizr -------------------------------------------
+
 function modernizrTask() {
     return src([styleWatch, jsWatch])
         .pipe(modernizr({
@@ -218,16 +232,79 @@ function modernizrTask() {
         .pipe(dest(jsURL));
 }
 
+// Build -------------------------------------------
+
+function deleteDistFolder() {
+    return del('./dist');
+}
+
+function optimizeImages() {
+    return src([
+            './app/assets/images/**/*',
+            '!./app/assets/images/icons',
+            '!./app/assets/images/icons/**/*'
+        ])
+        .pipe(imagemin([
+            //imagemin.jpegtran({progressive: true}),
+            imagemin.gifsicle({interlaced: true}),
+            imagemin.svgo({
+                plugins: [
+                    {removeViewBox: true},
+                    {cleanupIDs: false}
+                ]
+            }),
+            imageminPngquant({
+                speed: 1,
+                quality: 50
+            }),
+            imageminMozjpeg({
+                quality: 85
+            }) 
+
+        ], {
+            verbose: true
+        }
+        
+        ))
+        .pipe(dest('./dist/assets/images'))
+        .pipe( browserSync.stream() );
+}
+
+function revFiles() {
+    const srcFiles = ['!./app/temp', './app/temp/**/*', '!./app/temp/scripts/modernizr.js'] ;
+    const buildFolder = './dist/assets';
+    return src(srcFiles)
+        .pipe(RevAll.revision({ dontRenameFile: ['.html'] }))
+        .pipe(dest(buildFolder))
+}
+
+function injectFileNames() {
+    return src('./app/index.html')
+        .pipe(inject(src(['./dist/assets/styles/**/*.css'], {read: false}), {ignorePath: '/dist', addRootSlash: false}))
+        .pipe(inject(src('./dist/assets/scripts/vendors/*.js', {read: false}), {name: 'head', ignorePath: '/dist', addRootSlash: false}))
+        .pipe(inject(src(['./dist/assets/scripts/*.js', '!./dist/assets/scripts/vendors/**/*.js','!./dist/assets/scripts/vendors'], {read: false}), {ignorePath: '/dist', addRootSlash: false}))
+        .pipe(dest('./dist'));
+}
+
+// Watch -------------------------------------------
+
 function watch_files() {
     watch(styleWatch, series(styles, reload));
     watch(htmlWatch,  series(reload));
     watch(jsWatch,    series(modernizrTask, scripts, reload));
 }
 
+// Gulp Tasks -------------------------------------------
 
 task("styles", styles);
 task('scripts', scripts);
+
 task('modernizrTask', modernizrTask);
+
+task('deleteDistFolder', deleteDistFolder);
+task('optimizeImages', optimizeImages);
+task('revFiles', revFiles);
+task('injectFileNames', injectFileNames);
 
 task("beginClean", beginClean);
 task("createSprite", createSprite);
@@ -235,6 +312,7 @@ task("createPngCopy", createPngCopy);
 task("copySpriteGraphic", copySpriteGraphic);
 task("copySpriteCSS", copySpriteCSS);
 task("endClean", endClean);
+
 task("icons",
     series(
         beginClean,
@@ -246,6 +324,21 @@ task("icons",
     )
 );
 
-task("default", parallel(browser_sync, watch_files));
+// -------------
+
+task("default", parallel(
+    browser_sync,
+    watch_files
+));
+
+// -------------
+
+task("build", series(
+    deleteDistFolder,
+    parallel(optimizeImages),
+    revFiles,
+    injectFileNames
+));
+
 
 

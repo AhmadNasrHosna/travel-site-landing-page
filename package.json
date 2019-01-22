@@ -7,18 +7,29 @@
     "autoprefixer": "^9.4.5",
     "babel-loader": "^8.0.5",
     "browser-sync": "^2.26.3",
+    "cssnano": "^4.1.8",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
+    "gulp-imagemin": "^5.0.3",
+    "gulp-inject": "^5.0.2",
     "gulp-modernizr": "^3.1.0",
     "gulp-next": "^1.0.9",
     "gulp-plumber": "^1.2.1",
     "gulp-postcss": "^8.0.0",
     "gulp-pug": "^4.0.1",
     "gulp-rename": "^1.4.0",
+    "gulp-rev": "^9.0.0",
+    "gulp-rev-all": "^1.0.0",
+    "gulp-rev-rewrite": "^1.1.4",
     "gulp-sass": "^4.0.2",
     "gulp-svg-sprite": "^1.5.0",
     "gulp-svg2png": "^2.0.2",
+    "gulp-uglify": "^3.0.1",
+    "gulp-usemin": "^0.3.29",
+    "html-minifier": "^3.5.21",
+    "imagemin-mozjpeg": "^8.0.0",
+    "imagemin-pngquant": "^5.0.1",
     "jquery-smooth-scroll": "^2.2.0",
     "jquery-waypoints": "^2.0.5",
     "lazysizes": "^4.1.5",
@@ -33,6 +44,7 @@
     "postcss-responsive-type": "^1.0.0",
     "postcss-simple-vars": "^5.0.1",
     "postcss-zindex": "^4.0.1",
+    "uglifyjs-webpack-plugin": "^2.1.1",
     "waypoints": "^4.0.1",
     "webpack": "^4.28.4",
     "webpack-node-externals": "^1.7.2",
@@ -43,7 +55,10 @@
     "normalize.css": "^8.0.1"
   },
   "scripts": {
-    "dev": "webpack --mode development ./app/assets/scripts/App.bundle.js --output ./app/temp/scripts/",
-    "build": "webpack --mode production ./app/assets/scripts/App.bundle.js --output ./app/temp/scripts/"
+    "dev": "webpack --mode development ./app/assets/scripts/App.js --output ./app/temp/scripts/",
+    "build": "webpack --mode production ./app/assets/scripts/App.js --output ./app/temp/scripts/"
+  },
+  "resolutions": {
+    "image-webpack-loader/imagemin-pngquant": "5.0.1"
   }
 }
