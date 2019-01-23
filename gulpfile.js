@@ -278,7 +278,7 @@ function optimizeImages() {
                 quality: 50
             }),
             imageminMozjpeg({
-                quality: 85
+                quality: 80
             }) 
 
         ], {
