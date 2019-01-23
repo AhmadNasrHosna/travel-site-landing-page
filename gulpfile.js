@@ -222,7 +222,11 @@ function endClean() {
 // Modernizr -------------------------------------------
 
 function modernizrTask() {
-    return src([styleWatch, jsWatch])
+    const paths = [
+        "./app/assets/styles/**/*.css",
+        "./app/assets/scripts/**/*.js"
+    ];
+    return src(paths)
         .pipe(modernizr({
             "options": [
                 "setClasses"
@@ -234,16 +238,32 @@ function modernizrTask() {
 
 // Build -------------------------------------------
 
+const buildDir = './dist';
 function deleteDistFolder() {
-    return del('./dist');
+    return del(buildDir);
+}
+
+function copyGeneralFiles() {
+    const pathsToCopy = [
+        './app/**/*',
+        '!./app/index.html',
+        '!./app/assets/images/**',
+        '!./app/assets/styles/**',
+        '!./app/assets/scripts/**',
+        '!./app/temp',
+        '!./app/temp/**'
+    ];
+    return src(pathsToCopy)
+        .pipe(dest(buildDir));
 }
 
 function optimizeImages() {
-    return src([
-            './app/assets/images/**/*',
-            '!./app/assets/images/icons',
-            '!./app/assets/images/icons/**/*'
-        ])
+    const imagesPaths = [
+        './app/assets/images/**/*',
+        '!./app/assets/images/icons',
+        '!./app/assets/images/icons/**/*'
+    ];
+    return src(imagesPaths)
         .pipe(imagemin([
             //imagemin.jpegtran({progressive: true}),
             imagemin.gifsicle({interlaced: true}),
@@ -266,24 +286,25 @@ function optimizeImages() {
         }
         
         ))
-        .pipe(dest('./dist/assets/images'))
-        .pipe( browserSync.stream() );
+        .pipe(dest(`${buildDir}/assets/images`));
 }
 
 function revFiles() {
-    const srcFiles = ['!./app/temp', './app/temp/**/*', '!./app/temp/scripts/modernizr.js'] ;
-    const buildFolder = './dist/assets';
-    return src(srcFiles)
+    const paths = [
+        './app/temp/**/*',
+        '!./app/temp/scripts/modernizr.js'
+    ];
+    return src(paths)
         .pipe(RevAll.revision({ dontRenameFile: ['.html'] }))
-        .pipe(dest(buildFolder))
+        .pipe(dest(`${buildDir}/assets`))
 }
 
 function injectFileNames() {
     return src('./app/index.html')
-        .pipe(inject(src(['./dist/assets/styles/**/*.css'], {read: false}), {ignorePath: '/dist', addRootSlash: false}))
-        .pipe(inject(src('./dist/assets/scripts/vendors/*.js', {read: false}), {name: 'head', ignorePath: '/dist', addRootSlash: false}))
-        .pipe(inject(src(['./dist/assets/scripts/*.js', '!./dist/assets/scripts/vendors/**/*.js','!./dist/assets/scripts/vendors'], {read: false}), {ignorePath: '/dist', addRootSlash: false}))
-        .pipe(dest('./dist'));
+        .pipe(inject(src([`${buildDir}/assets/styles/**/*.css`], {read: false}), {ignorePath: '/dist', addRootSlash: false}))
+        .pipe(inject(src(`${buildDir}/assets/scripts/vendors/*.js`, {read: false}), {name: 'head', ignorePath: '/dist', addRootSlash: false}))
+        .pipe(inject(src([`${buildDir}/assets/scripts/*.js`, `!${buildDir}/assets/scripts/vendors/**/*.js`,`!${buildDir}/assets/scripts/vendors`], {read: false}), {ignorePath: '/dist', addRootSlash: false}))
+        .pipe(dest(buildDir));
 }
 
 // Watch -------------------------------------------
@@ -305,6 +326,7 @@ task('deleteDistFolder', deleteDistFolder);
 task('optimizeImages', optimizeImages);
 task('revFiles', revFiles);
 task('injectFileNames', injectFileNames);
+task('copyGeneralFiles', copyGeneralFiles);
 
 task("beginClean", beginClean);
 task("createSprite", createSprite);
@@ -335,9 +357,22 @@ task("default", parallel(
 
 task("build", series(
     deleteDistFolder,
-    parallel(optimizeImages),
+    "icons",
+    styles,
+    modernizrTask,
+    scripts,
+    parallel(optimizeImages, copyGeneralFiles),
     revFiles,
-    injectFileNames
+    injectFileNames,
+    function (done) {
+        browserSync.init({
+            notify: false,
+            server: {
+                baseDir: [buildDir]
+            }
+        });
+        done();
+    }
 ));
 
 
