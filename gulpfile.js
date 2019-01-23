@@ -238,7 +238,8 @@ function modernizrTask() {
 
 // Build -------------------------------------------
 
-const buildDir = './dist';
+const buildDir = './docs';
+
 function deleteDistFolder() {
     return del(buildDir);
 }
@@ -301,9 +302,9 @@ function revFiles() {
 
 function injectFileNames() {
     return src('./app/index.html')
-        .pipe(inject(src([`${buildDir}/assets/styles/**/*.css`], {read: false}), {ignorePath: '/dist', addRootSlash: false}))
-        .pipe(inject(src(`${buildDir}/assets/scripts/vendors/*.js`, {read: false}), {name: 'head', ignorePath: '/dist', addRootSlash: false}))
-        .pipe(inject(src([`${buildDir}/assets/scripts/*.js`, `!${buildDir}/assets/scripts/vendors/**/*.js`,`!${buildDir}/assets/scripts/vendors`], {read: false}), {ignorePath: '/dist', addRootSlash: false}))
+        .pipe(inject(src([`${buildDir}/assets/styles/**/*.css`], {read: false}), {ignorePath: '/docs', addRootSlash: false}))
+        .pipe(inject(src(`${buildDir}/assets/scripts/vendors/*.js`, {read: false}), {name: 'head', ignorePath: '/docs', addRootSlash: false}))
+        .pipe(inject(src([`${buildDir}/assets/scripts/*.js`, `!${buildDir}/assets/scripts/vendors/**/*.js`,`!${buildDir}/assets/scripts/vendors`], {read: false}), {ignorePath: '/docs', addRootSlash: false}))
         .pipe(dest(buildDir));
 }
 
