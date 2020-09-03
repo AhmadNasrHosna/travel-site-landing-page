@@ -32,7 +32,7 @@
     "imagemin-pngquant": "^5.0.1",
     "jquery-smooth-scroll": "^2.2.0",
     "jquery-waypoints": "^2.0.5",
-    "lazysizes": "^4.1.5",
+    "lazysizes": "^5.2.1",
     "picturefill": "^3.0.3",
     "postcss-conditionals": "^2.1.0",
     "postcss-custom-properties": "^8.0.9",
